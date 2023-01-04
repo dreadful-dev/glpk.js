@@ -46,6 +46,7 @@ const glpk = function (wasmBinary=null) {
         glp_free_env = cwrap('glp_free_env', 'number', []),
         glp_write_lp = cwrap('glp_write_lp', 'number', ['number', 'number', 'string']),
         solve_lp = cwrap('solve_lp', 'number', ['number', 'number']),
+        glp_exact = cwrap('glp_exact', 'number', ['number', 'number']),
         solve_mip = cwrap('solve_mip', 'number', ['number', 'number', 'number', 'number']),
         get_glp_smcp = cwrap('get_glp_smcp', 'number', ['number', 'number', 'number']),
         solve_lp_itlim = cwrap('solve_lp_itlim', 'number', ['number', 'number']);
@@ -189,7 +190,7 @@ const glpk = function (wasmBinary=null) {
                     }
                 }
             } else {
-                solve_lp(P, opt.msglev, opt.tmlim, opt.presol);
+                glp_exact(P, opt.msglev, opt.tmlim, opt.presol);
                 ret.status = glp_get_status(P);
                 ret.z = glp_get_obj_val(P);
                 ret.vars = get_vars(P);
