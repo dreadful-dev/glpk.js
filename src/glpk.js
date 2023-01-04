@@ -108,12 +108,6 @@ const glpk = function (wasmBinary=null) {
             _free(val_ptr);
         });
 
-        if (lp.bounds) {
-            lp.bounds.forEach(b => {
-                glp_set_col_bnds(P, find_col(P, b.name), b.type, b.lb, b.ub);
-            });
-        }
-
         if (lp.generals) {
             lp.generals.forEach(name => {
                 glp_set_col_kind(P, find_col(P, name), GLP_IV);
@@ -143,6 +137,12 @@ const glpk = function (wasmBinary=null) {
             else
                 type = this.GLP_FX;
             glp_set_col_bnds(P, j, type, lb, ub);
+        }
+
+        if (lp.bounds) {
+            lp.bounds.forEach(b => {
+                glp_set_col_bnds(P, find_col(P, b.name), b.type, b.lb, b.ub);
+            });
         }
 
         /* problem data has been successfully read */
