@@ -46,7 +46,7 @@ const glpk = function (wasmBinary=null) {
         glp_free_env = cwrap('glp_free_env', 'number', []),
         glp_write_lp = cwrap('glp_write_lp', 'number', ['number', 'number', 'string']),
         solve_lp = cwrap('solve_lp', 'number', ['number', 'number']),
-        glp_exact = cwrap('glp_exact', 'number', ['number', 'number']),
+        solve_lp_exact = cwrap('solve_lp_exact', 'number', ['number', 'number']),
         solve_mip = cwrap('solve_mip', 'number', ['number', 'number', 'number', 'number']),
         get_glp_smcp = cwrap('get_glp_smcp', 'number', ['number', 'number', 'number']),
         solve_lp_itlim = cwrap('solve_lp_itlim', 'number', ['number', 'number']);
@@ -190,14 +190,13 @@ const glpk = function (wasmBinary=null) {
                     }
                 }
             } else {
-                glp_exact(P, opt.msglev, opt.tmlim, opt.presol);
+                solve_lp_exact(P, opt.msglev, opt.tmlim, opt.itlim);
                 ret.status = glp_get_status(P);
                 ret.z = glp_get_obj_val(P);
                 ret.vars = get_vars(P);
                 ret.dual = get_dual(P);
             }
         }
-
     };
 
     function get_vars(P) {
@@ -270,6 +269,7 @@ const glpk = function (wasmBinary=null) {
             presol: typeof opt_.presol !== 'undefined' ? +(!!opt_.presol) : 1,
             msglev: typeof opt_.msglev !== 'undefined' ? +opt_.msglev : this.GLP_MSG_ERR,
             tmlim: typeof opt_.tmlim !== 'undefined' && +opt_.tmlim >= 0 ? +opt_.tmlim * 1000 : INT_MAX,
+            imlim: typeof opt_.tmlim !== 'undefined' && +opt_.tmlim >= 0 ? +opt_.tmlim * 1000 : INT_MAX,
             mipgap: typeof opt_.mipgap !== 'undefined' && +opt_.mipgap >= 0 ? +opt_.mipgap : 0.0,
             cb: opt_.cb
         };
