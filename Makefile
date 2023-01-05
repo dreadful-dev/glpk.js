@@ -61,7 +61,7 @@ glpk:
 	mkdir -p src/.build; \
 	cd $(PWD)/src/glpk && \
 	autoreconf -fi && \
-	emconfigure ./configure --disable-shared && \
+	emconfigure ./configure --disable-shared --with-gmp && \
 	emmake make -j4 \
 
 js: src/pre.js src/glpk.js.c
