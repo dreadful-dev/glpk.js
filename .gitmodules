@@ -1,3 +1,6 @@
 [submodule "src/glpk"]
 	path = src/glpk
 	url = https://salsa.debian.org/science-team/glpk.git
+[submodule "src/gmp"]
+	path = src/gmp
+	url = git@github.com:dreadful-dev/gmp.git
