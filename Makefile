@@ -55,14 +55,21 @@ EMCC_FLAGS += -s EXPORTED_FUNCTIONS="[ \
 
 PWD=$(shell pwd)
 
-all: glpk js
+all: gmp glpk js
+
+gmp:
+	mkdir -p src/.build; \
+	cd $(PWD)/src/gmp && \
+	emconfigure ./configure --disable-assembly --host none --enable-cxx --prefix=${HOME}/opt && \
+	emmake make -j4 && \
+	make install
 
 glpk:
 	mkdir -p src/.build; \
 	cd $(PWD)/src/glpk && \
-	autoreconf -fi && \
-	emconfigure ./configure --disable-shared --with-gmp && \
-	emmake make -j4 \
+	CPPFLAGS="-I/root/opt/include" LDFLAGS="-L/root/opt/lib -lgmp" autoreconf -fi && \
+	CPPFLAGS="-I/root/opt/include" LDFLAGS="-L/root/opt/lib -lgmp" emconfigure ./configure --disable-shared --with-gmp && \
+	emmake make -j4
 
 js: src/pre.js src/glpk.js.c
 	cd $(PWD); \
@@ -70,6 +77,7 @@ js: src/pre.js src/glpk.js.c
 	-Isrc/glpk/src \
 	--pre-js src/pre.js \
 	src/glpk/src/.libs/libglpk.a \
+	/root/opt/lib/libgmp.a \
 	src/glpk.js.c -o src/.build/glpk.js
 
 clean:
