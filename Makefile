@@ -73,7 +73,7 @@ glpk:
 
 js: src/pre.js src/glpk.js.c
 	cd $(PWD); \
-	emcc -Os --memory-init-file 0 $(EMCC_FLAGS) -s EXPORTED_RUNTIME_METHODS="[cwrap, writeArrayToMemory]" \
+	emcc -O0 --memory-init-file 0 $(EMCC_FLAGS) -s EXPORTED_RUNTIME_METHODS="[cwrap, writeArrayToMemory]" \
 	-Isrc/glpk/src \
 	--pre-js src/pre.js \
 	src/glpk/src/.libs/libglpk.a \
